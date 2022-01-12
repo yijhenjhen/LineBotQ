@@ -101,6 +101,7 @@ def index():
                                 "text": text
                             }
                         ]
+                print(payload)
                 replyMessage(payload)
             elif events[0]["message"]["type"] == "location":
                 title = events[0]["message"]["title"]
@@ -263,7 +264,8 @@ def getImageMessage(originalContentUrl):
 
 
 def replyMessage(payload):
-    response = {}
+    response = request.post('https://api.line.me/v2/bot/message/reply',
+                             headers=HEADER, data=json.dumps(payload))
     print(response.text)
     return 'OK'
 
