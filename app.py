@@ -33,6 +33,7 @@ def index():
     if request.method == 'GET':
         return 'ok'
     body = request.json
+    print(body)
     events = body["events"]
     print(body)
     if "replyToken" in events[0]:
@@ -263,7 +264,8 @@ def getImageMessage(originalContentUrl):
 
 
 def replyMessage(payload):
-    response = {}
+    response = requests.post('https://api.line.me/v2/bot/message/reply',
+                             headers=HEADER, data=json.dumps(payload))
     print(response.text)
     return 'OK'
 
