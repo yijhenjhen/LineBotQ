@@ -163,13 +163,6 @@ def pretty_echo(event):
 def sendTextMessageToMe():
     body = request.json
     payload = {
-        "to": my_line_id,
-        "messages": [
-            {
-                "type": "text",
-                "text": body["text"]
-            }
-        ]
     }
     pushMessage(payload)
     return 'OK'
@@ -178,17 +171,15 @@ def sendTextMessageToMe():
 def getNameEmojiMessage():
     lookUpStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     productId = "5ac21a8c040ab15980c9b43f"
-    name = "Miles"
+    name = ""
     message = dict()
     message["type"] = "text"
-    message["text"] = "".join("$" for r in range(len(name)))
+    message["text"] = {}
     emojis_list = list()
     for i, nChar in enumerate(name):
         emojis_list.append(
             {
-              "index": i,
-              "productId": productId,
-              "emojiId": f"{lookUpStr.index(nChar) + 1 :03}"
+
             }
         )
     message["emojis"] = emojis_list
@@ -202,22 +193,7 @@ def getCarouselMessage(data):
     message["template"] = {
           "type": "image_carousel",
           "columns": [
-              {
-                "imageUrl": F"{end_point}/static/taipei_101.jpeg",
-                "action": {
-                  "type": "postback",
-                  "label": "台北101",
-                  "data": json.dumps(data)
-                }
-              },
-              {
-                "imageUrl": F"{end_point}/static/taipei_1.jpeg",
-                "action": {
-                  "type": "postback",
-                  "label": "台北101",
-                  "data": json.dumps(data)
-                }
-              }
+
           ]
     }
     return message
@@ -229,21 +205,7 @@ def getLocationConfirmMessage(title, latitude, longitude):
     message["altText"] = "this is a confirm template"
     data = {"title": title, "latitude": latitude, "longitude": longitude, "action": "get_near"}
     message["template"] = {
-          "type": "confirm",
-          "text": F"您是否確定搜尋{title}附近景點？",
-          "actions": [
-                    {
-                       "type": "postback",
-                       "label": "是",
-                       "data": json.dumps(data),
-                       "text": "是"
-                      },
-                    {
-                        "type": "message",
-                        "label": "否",
-                        "text": "否"
-                      }
-          ]
+
     }
     return message
 
@@ -253,15 +215,7 @@ def getCallCarMessage(data):
     message["type"] = "template"
     message["altText"] = "this is a confirm template"
     message["template"] = {
-                       "type": "buttons",
-                       "text":F"請選擇至{data['title']}預約叫車時間",
-                       "actions": [{
-                           "type": "datetimepicker",
-                           "label": "預約",
-                           "data": json.dumps(data),
-                           "mode": "datetime"
-                           }
-                       ]
+
                       }
     return message
 
@@ -276,19 +230,13 @@ def getPlayStickerMessage():
 
 def getTaipei101LocationMessage():
     message = dict()
-    message["type"] = "location"
-    message["title"] = "台北101"
-    message["address"] = "臺北市信義區西村里8鄰信義路五段7號"
-    message["latitude"] = 25.0335748
-    message["longitude"] = 121.5612538
+
     return message
 
 
 def getMRTVideoMessage():
     message = dict()
-    message["type"] = "video"
-    message["originalContentUrl"] = F"{end_point}/static/taipei_101_video.mp4"
-    message["previewImageUrl"] = F"{end_point}/static/taipei_1.jpeg"
+
     return message
 
 
@@ -310,29 +258,24 @@ def getTaipei101ImageMessage(originalContentUrl=F"{end_point}/static/taipei_101.
 
 def getImageMessage(originalContentUrl):
     message = dict()
-    message["type"] = "image"
-    message["originalContentUrl"] = originalContentUrl
-    message["previewImageUrl"] = originalContentUrl
+
     return message
 
 
 def replyMessage(payload):
-    response = requests.post('https://api.line.me/v2/bot/message/reply',
-                             headers=HEADER, data=json.dumps(payload))
+    response = {}
     print(response.text)
     return 'OK'
 
 
 def pushMessage(payload):
-    response = requests.post('https://api.line.me/v2/bot/message/push',
-                             headers=HEADER, data=json.dumps(payload))
+    response = {}
     print(response.text)
     return 'OK'
 
 
 def getTotalSentMessageCount():
-    response = requests.get('https://api.line.me/v2/bot/message/quota/consumption',
-                             headers=HEADER)
+    response = {}
     print(response.text)
     return response.json()['totalUsage']
 
@@ -371,42 +314,3 @@ def upload_file():
                     "text": F"年紀：{age}\n性別：{gender}"
                 }
             ]
-            pushMessage(payload)
-    return 'OK'
-
-
-@app.route('/line_login', methods = ['GET'])
-def line_login():
-    if request.method == 'GET':
-        code = request.args.get("code", None)
-        state = request.args.get("state", None)
-
-        if code and state:
-            #print("code:",code)
-            #print("state:",state)
-            HEADERS = {'Content-Type': 'application/x-www-form-urlencoded'}
-            url = "https://api.line.me/oauth2/v2.1/token"
-            FormData = {"grant_type": 'authorization_code', "code": code, "redirect_uri": F"{end_point}/line_login", "client_id": client_id, "client_secret":client_secret}
-            data = parse.urlencode(FormData)
-            content = requests.post(url=url, headers=HEADERS, data=data).text
-            content = json.loads(content)
-            url = "https://api.line.me/v2/profile"
-            HEADERS = {'Authorization': content["token_type"]+" "+content["access_token"]}
-            content = requests.get(url=url, headers=HEADERS).text
-            content = json.loads(content)
-            name = content["displayName"]
-            userID = content["userId"]
-            pictureURL = content["pictureUrl"]
-            statusMessage = content["statusMessage"]
-            print(content)
-            return render_template('profile.html', name=name, pictureURL=
-                                   pictureURL, userID=userID, statusMessage=
-                                   statusMessage)
-        else:
-            return render_template('login.html', client_id=client_id,
-                                   end_point=end_point)
-
-
-if __name__ == "__main__":
-    app.debug = True
-    app.run()
