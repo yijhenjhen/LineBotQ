@@ -271,7 +271,8 @@ def replyMessage(payload):
 
 
 def pushMessage(payload):
-    response = {}
+    response = request.post('https://api.line.me/v2/bot/message/push',
+                             headers=HEADER, data=json.dumps(payload))
     print(response.text)
     return 'OK'
 
