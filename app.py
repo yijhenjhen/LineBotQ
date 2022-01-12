@@ -175,7 +175,7 @@ def getNameEmojiMessage():
     name = "Katherine"
     message = dict()
     message["type"] = "text"
-    message["text"] = "".join("$"*len(name))
+    message["text"] = "$$$$$$$$$"
     emojis_list = list()
     for i, nChar in enumerate(name):
         emojis_list.append(
