@@ -219,6 +219,22 @@ def getCarouselMessage(data):
                   "label": "台北101",
                   "data": json.dumps(data)
                 }
+              },
+              {
+                "imageUrl": F"https://zh.wikipedia.org/wiki/%E8%87%BA%E5%8C%97%E5%AD%94%E5%AD%90%E5%BB%9F#/media/File:%E5%8F%B0%E5%8C%97%E5%AD%94%E5%BB%9F.jpg",
+                "action": {
+                  "type": "postback",
+                  "label": "台北孔廟",
+                  "data": json.dumps(data)
+                }
+              },
+              {
+                "imageUrl": F"https://images.chinatimes.com/newsphoto/2020-08-11/1024/20200811003090.jpg",
+                "action": {
+                  "type": "postback",
+                  "label": "士林夜市",
+                  "data": json.dumps(data)
+                }
               }
           ]
     }
@@ -243,7 +259,7 @@ def getLocationConfirmMessage(title, latitude, longitude):
                     {
                         "type": "message",
                         "label": "否",
-                        "text": "否"
+                        "text": "感謝您的使用"
                       }
           ]
     }
