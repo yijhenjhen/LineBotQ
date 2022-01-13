@@ -51,6 +51,8 @@ def index():
                     payload["messages"] = [getTaipei101ImageMessage(),
                                            getTaipei101LocationMessage(),
                                            getMRTVideoMessage()]
+                elif text == "去哪裡":
+                    payload["messages"] = [getLocationMessage()]
                 elif text == "扣打":
                     payload["messages"] = [
                             {
@@ -283,6 +285,14 @@ def getTaipei101LocationMessage():
     message["longitude"] = 121.5612538
     return message
 
+def getLocationMessage():
+    message = dict()
+    message["type"] = "location"
+    message["title"] = "太魯閣國家公園"
+    message["address"] = "972花蓮縣秀林鄉富世291號"
+    message["latitude"] = 24.20483
+    message["longitude"] = 121.45407
+    return message
 
 def getMRTVideoMessage():
     message = dict()
