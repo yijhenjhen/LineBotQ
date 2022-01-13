@@ -51,8 +51,6 @@ def index():
                     payload["messages"] = [getTaipei101ImageMessage(),
                                            getTaipei101LocationMessage(),
                                            getMRTVideoMessage()]
-                elif text == "去哪裡":
-                    payload["messages"] = [getLocationMessage()]
                 elif text == "扣打":
                     payload["messages"] = [
                             {
@@ -90,7 +88,7 @@ def index():
                                       {
                                         "type": "uri",
                                         "label": "聯絡我",
-                                        "uri": "tel:0978781593"
+                                        "uri": "tel:0972062449"
                                       }
                                   ]
                               }
@@ -180,7 +178,7 @@ def sendTextMessageToMe():
 def getNameEmojiMessage():
     lookUpStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     productId = "5ac21a8c040ab15980c9b43f"
-    name = "Katherine"
+    name = "Miles"
     message = dict()
     message["type"] = "text"
     message["text"] = "".join("$" for r in range(len(name)))
@@ -219,22 +217,6 @@ def getCarouselMessage(data):
                   "label": "台北101",
                   "data": json.dumps(data)
                 }
-              },
-              {
-                "imageUrl": F"https://zh.wikipedia.org/wiki/%E8%87%BA%E5%8C%97%E5%AD%94%E5%AD%90%E5%BB%9F#/media/File:%E5%8F%B0%E5%8C%97%E5%AD%94%E5%BB%9F.jpg",
-                "action": {
-                  "type": "postback",
-                  "label": "台北孔廟",
-                  "data": json.dumps(data)
-                }
-              },
-              {
-                "imageUrl": F"https://images.chinatimes.com/newsphoto/2020-08-11/1024/20200811003090.jpg",
-                "action": {
-                  "type": "postback",
-                  "label": "士林夜市",
-                  "data": json.dumps(data)
-                }
               }
           ]
     }
@@ -259,7 +241,7 @@ def getLocationConfirmMessage(title, latitude, longitude):
                     {
                         "type": "message",
                         "label": "否",
-                        "text": "感謝您的使用"
+                        "text": "否"
                       }
           ]
     }
@@ -301,14 +283,6 @@ def getTaipei101LocationMessage():
     message["longitude"] = 121.5612538
     return message
 
-def getLocationMessage():
-    message = dict()
-    message["type"] = "location"
-    message["title"] = "太魯閣國家公園"
-    message["address"] = "972花蓮縣秀林鄉富世291號"
-    message["latitude"] = 24.20483
-    message["longitude"] = 121.45407
-    return message
 
 def getMRTVideoMessage():
     message = dict()
@@ -318,23 +292,17 @@ def getMRTVideoMessage():
     return message
 
 
-# def getMRTSoundMessage():
-#     message = dict()
-#     message["type"] = "audio"
-#     message["originalContentUrl"] = F"{end_point}/static/mrt_sound.m4a"
-#     import audioread
-#     with audioread.audio_open('static/mrt_sound.m4a') as f:
-#         # totalsec contains the length in float
-#         totalsec = f.duration
-#     message["duration"] = totalsec * 1000
-#     return message
-
 def getMRTSoundMessage():
     message = dict()
     message["type"] = "audio"
     message["originalContentUrl"] = F"{end_point}/static/mrt_sound.m4a"
-    message["duration"] = 10
+    import audioread
+    with audioread.audio_open('static/mrt_sound.m4a') as f:
+        # totalsec contains the length in float
+        totalsec = f.duration
+    message["duration"] = totalsec * 1000
     return message
+
 
 def getTaipei101ImageMessage(originalContentUrl=F"{end_point}/static/taipei_101.jpeg"):
     return getImageMessage(originalContentUrl)
